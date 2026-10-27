@@ -1,0 +1,33 @@
+<UserControl x:Class="AiDevControlPanel.App.Views.AddProjectView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24" MaxWidth="760" HorizontalAlignment="Left">
+            <TextBlock Text="Add project" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,16"
+                       Text="Select the root folder of a git repository that is connected to GitHub and contains a README. If it has no CLAUDE.md yet, /init creates one and it is committed locally." />
+
+            <TextBlock Text="Project folder" Margin="0,0,0,4" />
+            <DockPanel Margin="0,0,0,12">
+                <Button DockPanel.Dock="Right" Content="Browse…" Command="{Binding BrowseCommand}" Padding="12,3" Margin="8,0,0,0" />
+                <TextBox Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" Padding="4" />
+            </DockPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Add project" Command="{Binding AddCommand}" IsDefault="True" Style="{StaticResource ActionButton}" />
+                <ProgressBar IsIndeterminate="True" Width="120" Height="6" VerticalAlignment="Center"
+                             Visibility="{Binding IsBusy, Converter={StaticResource VisibleWhen}}" />
+            </StackPanel>
+
+            <ItemsControl ItemsSource="{Binding Errors}" Margin="0,12,0,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{StaticResource ErrorBackground}" CornerRadius="3" Padding="8,4" Margin="0,0,0,4">
+                            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

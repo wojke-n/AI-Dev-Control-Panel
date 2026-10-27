@@ -1,0 +1,25 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Backgrounds of projects, TSAs and issues; keys are "StateBrush." + StateColor. -->
+    <SolidColorBrush x:Key="StateBrush.White" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="StateBrush.Gray" Color="#C8C8C8" />
+    <SolidColorBrush x:Key="StateBrush.LightYellow" Color="#FFF7C2" />
+    <SolidColorBrush x:Key="StateBrush.LightBlue" Color="#BDE5FF" />
+    <SolidColorBrush x:Key="StateBrush.Yellow" Color="#FFE04D" />
+    <SolidColorBrush x:Key="StateBrush.DarkBlue" Color="#0B3D91" />
+    <SolidColorBrush x:Key="StateBrush.Orange" Color="#FFAE52" />
+    <SolidColorBrush x:Key="StateBrush.Purple" Color="#D7A8F0" />
+    <SolidColorBrush x:Key="StateBrush.Red" Color="#F28B82" />
+    <SolidColorBrush x:Key="StateBrush.Green" Color="#A8DDA8" />
+    <SolidColorBrush x:Key="StateBrush.Brown" Color="#C49A6C" />
+
+    <!-- Text on dark state backgrounds. -->
+    <SolidColorBrush x:Key="StateForeground.Dark" Color="#1F1F1F" />
+    <SolidColorBrush x:Key="StateForeground.Light" Color="#FFFFFF" />
+
+    <!-- Item borders: the selected item and the items associated with it. -->
+    <SolidColorBrush x:Key="SelectedBorderBrush" Color="#C800C8" />
+    <SolidColorBrush x:Key="HighlightBorderBrush" Color="#1F1F1F" />
+
+</ResourceDictionary>

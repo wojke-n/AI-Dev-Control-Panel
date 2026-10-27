@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "properties": {
+    "status": { "type": "string", "enum": ["done", "failed"] },
+    "report": { "type": "string" },
+    "commitMessage": { "type": "string" }
+  },
+  "required": ["status", "report", "commitMessage"]
+}

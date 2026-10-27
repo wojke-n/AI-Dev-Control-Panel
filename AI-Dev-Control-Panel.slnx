@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AiDevControlPanel.App/AiDevControlPanel.App.csproj" />
+    <Project Path="src/AiDevControlPanel.Core/AiDevControlPanel.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AiDevControlPanel.Core.Tests/AiDevControlPanel.Core.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/IconGen/IconGen.csproj" />
+  </Folder>
+</Solution>

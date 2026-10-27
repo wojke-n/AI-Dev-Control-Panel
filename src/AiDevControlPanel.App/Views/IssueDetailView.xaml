@@ -1,0 +1,139 @@
+<UserControl x:Class="AiDevControlPanel.App.Views.IssueDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:AiDevControlPanel.App.Controls"
+             xmlns:views="clr-namespace:AiDevControlPanel.App.Views">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <ContentControl Content="{Binding Question}" Focusable="False" />
+
+            <!-- Header -->
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                    <Button Content="Open worktree" Command="{Binding OpenWorktreeCommand}" Style="{StaticResource ActionButton}"
+                            Visibility="{Binding HasWorktree, Converter={StaticResource VisibleWhen}}" />
+                    <Button Content="Open on GitHub" Command="{Binding OpenOnGitHubCommand}" Style="{StaticResource ActionButton}" Margin="0" />
+                </StackPanel>
+                <TextBlock Text="{Binding Header}" Style="{StaticResource PageTitle}" />
+            </DockPanel>
+            <TextBlock Text="{Binding Meta}" Style="{StaticResource Muted}" />
+            <DockPanel Margin="0,6,0,0">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <TextBlock Text="Priority:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <ComboBox ItemsSource="{Binding PriorityModes}" SelectedItem="{Binding SelectedPriorityMode}" Width="120" />
+                </StackPanel>
+                <TextBlock Text="{Binding StateText}" FontWeight="SemiBold" VerticalAlignment="Center" />
+            </DockPanel>
+
+            <!-- Messages -->
+            <Border Background="{StaticResource NoticeBackground}" CornerRadius="3" Padding="10" Margin="0,12,0,0"
+                    Visibility="{Binding Notice, Converter={StaticResource VisibleWhen}}">
+                <TextBlock Text="{Binding Notice}" TextWrapping="Wrap" />
+            </Border>
+            <Border Background="{StaticResource ErrorBackground}" CornerRadius="3" Padding="10" Margin="0,12,0,0"
+                    Visibility="{Binding IsError, Converter={StaticResource VisibleWhen}}">
+                <StackPanel>
+                    <TextBlock Text="{Binding LastError}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Retry" Command="{Binding RetryCommand}" Style="{StaticResource ActionButton}" />
+                        <Button Content="Discard progress" Command="{Binding RestartCommand}" Style="{StaticResource ActionButton}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <TextBlock Text="{Binding ActionError}" Foreground="DarkRed" TextWrapping="Wrap" Margin="0,8,0,0"
+                       Visibility="{Binding ActionError, Converter={StaticResource VisibleWhen}}" />
+
+            <!-- Manual starts -->
+            <Button Content="Start planning" Command="{Binding StartPlanningCommand}" Style="{StaticResource ActionButton}"
+                    HorizontalAlignment="Left" Margin="0,12,0,0"
+                    Visibility="{Binding CanStartPlanning, Converter={StaticResource VisibleWhen}}" />
+            <Button Content="Start execution" Command="{Binding StartExecutionCommand}" Style="{StaticResource ActionButton}"
+                    HorizontalAlignment="Left" Margin="0,12,0,0"
+                    Visibility="{Binding CanStartExecution, Converter={StaticResource VisibleWhen}}" />
+
+            <!-- Review -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0" BorderBrush="{StaticResource StateBrush.DarkBlue}" BorderThickness="2"
+                    Visibility="{Binding IsReview, Converter={StaticResource VisibleWhen}}">
+                <StackPanel>
+                    <TextBlock Text="Review the result" FontSize="15" FontWeight="SemiBold" />
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,2,0,8"
+                               Text="The changes are committed locally in the worktree but not pushed. Check them, then decide." />
+                    <TextBox Text="{Binding DiffStat, Mode=OneWay}" IsReadOnly="True" FontFamily="Consolas" BorderThickness="0" Background="#F6F8FA"
+                             Padding="6" Margin="0,0,0,10" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto"
+                             Visibility="{Binding DiffStat, Converter={StaticResource VisibleWhen}}" />
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Button Content="Accept" Command="{Binding AcceptCommand}" Style="{StaticResource ActionButton}"
+                                ToolTip="Merge into the default branch, push and close the issue" />
+                        <Button Content="Restart" Command="{Binding RestartCommand}" Style="{StaticResource ActionButton}"
+                                ToolTip="Discard all progress; then edit the issue or plan and start again" />
+                    </StackPanel>
+                    <TextBlock Text="Adjust: what has to change so that the result can be accepted?" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding AdjustText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MultilineTextBox}" MinHeight="70" />
+                    <Button Content="Adjust" Command="{Binding AdjustCommand}" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Rejected: edit and restart -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0" BorderBrush="{StaticResource StateBrush.Red}" BorderThickness="2"
+                    Visibility="{Binding IsRejected, Converter={StaticResource VisibleWhen}}">
+                <StackPanel>
+                    <TextBlock Text="Start a new attempt" FontSize="15" FontWeight="SemiBold" />
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,2,0,8"
+                               Text="Improve the issue or the plan, then restart. Changes to the issue are saved on GitHub." />
+                    <TextBlock Text="Issue" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding EditableBody, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MultilineTextBox}" MinHeight="120" MaxHeight="360" />
+                    <TextBlock Text="Plan" Margin="0,10,0,4" />
+                    <TextBox Text="{Binding EditablePlan, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MultilineTextBox}" MinHeight="120" MaxHeight="360" />
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button Content="Restart with planning" Command="{Binding RestartWithPlanningCommand}" Style="{StaticResource ActionButton}" />
+                        <Button Content="Restart with this plan" Command="{Binding RestartWithPlanCommand}" Style="{StaticResource ActionButton}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Content -->
+            <TextBlock Text="Description" Style="{StaticResource SectionTitle}" />
+            <Border Style="{StaticResource Card}">
+                <controls:MarkdownView Markdown="{Binding Body}" />
+            </Border>
+
+            <StackPanel Visibility="{Binding Report, Converter={StaticResource VisibleWhen}}">
+                <TextBlock Text="Completion report" Style="{StaticResource SectionTitle}" />
+                <Border Style="{StaticResource Card}">
+                    <controls:MarkdownView Markdown="{Binding Report}" />
+                </Border>
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding Plan, Converter={StaticResource VisibleWhen}}">
+                <TextBlock Text="Plan" Style="{StaticResource SectionTitle}" />
+                <Border Style="{StaticResource Card}">
+                    <controls:MarkdownView Markdown="{Binding Plan}" />
+                </Border>
+            </StackPanel>
+
+            <DockPanel Margin="0,16,0,6">
+                <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ReloadCommentsCommand}" ToolTip="Reload comments" />
+                <TextBlock Text="Comments" Style="{StaticResource SectionTitle}" Margin="0" VerticalAlignment="Center" />
+            </DockPanel>
+            <TextBlock Text="{Binding CommentsStatus}" Style="{StaticResource Muted}"
+                       Visibility="{Binding CommentsStatus, Converter={StaticResource VisibleWhen}}" />
+            <ItemsControl ItemsSource="{Binding Comments}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,6">
+                                    <Run Text="{Binding Author, Mode=OneWay}" FontWeight="SemiBold" />
+                                    <Run Text="{Binding Date, Mode=OneWay}" />
+                                </TextBlock>
+                                <controls:MarkdownView Markdown="{Binding Body}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <views:ActivityView DataContext="{Binding Activity}" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

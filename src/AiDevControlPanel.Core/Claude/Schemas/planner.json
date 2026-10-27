@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "status": { "type": "string", "enum": ["questions", "plan"] },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": { "type": "string" },
+          "header": { "type": "string" },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": { "type": "string" },
+                "description": { "type": "string" }
+              },
+              "required": ["label"]
+            }
+          },
+          "multiSelect": { "type": "boolean" }
+        },
+        "required": ["question"]
+      }
+    },
+    "plan": { "type": "string" }
+  },
+  "required": ["status"]
+}

@@ -1,0 +1,57 @@
+<UserControl x:Class="AiDevControlPanel.App.Views.QuestionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:AiDevControlPanel.App.ViewModels">
+    <Border Background="{StaticResource QuestionBackground}" BorderBrush="{StaticResource AccentBrush}" BorderThickness="1"
+            CornerRadius="4" Padding="12" Margin="0,0,0,12">
+        <StackPanel>
+            <TextBlock Text="Claude needs an answer" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" />
+            <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:QuestionItemViewModel}">
+                        <StackPanel Margin="0,0,0,12">
+                            <TextBlock Text="{Binding Header}" Style="{StaticResource Muted}" FontSize="11"
+                                       Visibility="{Binding Header, Converter={StaticResource VisibleWhen}}" />
+                            <TextBlock Text="{Binding Text}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,6" />
+
+                            <!-- Single choice -->
+                            <ItemsControl ItemsSource="{Binding Options}" Visibility="{Binding SingleSelect, Converter={StaticResource VisibleWhen}}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:OptionViewModel}">
+                                        <RadioButton IsChecked="{Binding IsSelected}" Margin="0,2"
+                                                     GroupName="{Binding DataContext.GroupName, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Label}" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding Description}" Style="{StaticResource Muted}" FontSize="11"
+                                                           Visibility="{Binding Description, Converter={StaticResource VisibleWhen}}" />
+                                            </StackPanel>
+                                        </RadioButton>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Multiple choice -->
+                            <ItemsControl ItemsSource="{Binding Options}" Visibility="{Binding MultiSelect, Converter={StaticResource VisibleWhen}}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:OptionViewModel}">
+                                        <CheckBox IsChecked="{Binding IsSelected}" Margin="0,2">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Label}" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding Description}" Style="{StaticResource Muted}" FontSize="11"
+                                                           Visibility="{Binding Description, Converter={StaticResource VisibleWhen}}" />
+                                            </StackPanel>
+                                        </CheckBox>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock Text="{Binding OtherLabel}" Style="{StaticResource Muted}" Margin="0,6,0,2" />
+                            <TextBox Text="{Binding OtherText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MultilineTextBox}" MinHeight="48" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="Submit" Command="{Binding SubmitCommand}" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" />
+        </StackPanel>
+    </Border>
+</UserControl>

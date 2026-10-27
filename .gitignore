@@ -1,0 +1,15 @@
+# Build output
+bin/
+obj/
+artifacts/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Tests
+TestResults/
+*.coverage

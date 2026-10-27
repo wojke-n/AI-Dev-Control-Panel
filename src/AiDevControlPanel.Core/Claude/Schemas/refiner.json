@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "properties": {
+    "status": { "type": "string", "enum": ["questions", "done"] },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": { "type": "string" },
+          "header": { "type": "string" },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": { "type": "string" },
+                "description": { "type": "string" }
+              },
+              "required": ["label"]
+            }
+          },
+          "multiSelect": { "type": "boolean" }
+        },
+        "required": ["question"]
+      }
+    },
+    "tsaTitle": { "type": "string" },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ref": { "type": "string" },
+          "parentRef": { "type": ["string", "null"] },
+          "type": { "type": "string", "enum": ["feature", "bug", "security"] },
+          "title": { "type": "string" },
+          "body": { "type": "string" },
+          "priority": { "type": "integer", "minimum": 0, "maximum": 4 },
+          "blockedBy": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["ref", "type", "title", "body", "priority"]
+      }
+    }
+  },
+  "required": ["status"]
+}
